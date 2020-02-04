@@ -1,5 +1,8 @@
 package domain;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 public class MovieTicket
 {
     private MovieScreening movieScreening;
@@ -34,5 +37,13 @@ public class MovieTicket
     public String toString() {
         return movieScreening.toString() + " - row " + seatRow + ", seat " + seatNr +
                 (isPremiumTicket ? " (Premium)" : "");
+    }
+
+    public LocalDateTime GetScreeningDate(){
+        return movieScreening.GEtDateScreening();
+    }
+
+    public double SetScreeningPrice(double Price){
+        return movieScreening.SetPricePerSeat(Price);
     }
 }

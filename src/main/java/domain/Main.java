@@ -14,7 +14,7 @@ public class Main {
         MovieScreening movieScreening = new MovieScreening(movie, now, 12.99);
         MovieTicket movieticket = new MovieTicket(movieScreening,true,12,13);
         MovieTicket movieticket1 = new MovieTicket(movieScreening,true,12,14);
-        Order order = new Order(0, false);
+        Order order = new Order(0, true);
 
         order.addSeatReservation(movieticket);
         order.addSeatReservation(movieticket1);

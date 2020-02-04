@@ -1,6 +1,7 @@
 package domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 
@@ -8,6 +9,7 @@ public class Order
 {
     private int orderNr;
     private boolean isStudentOrder;
+    private  double OrderPrice = 0.00;
 
     private ArrayList<MovieTicket> tickets;
 
@@ -33,61 +35,67 @@ public class Order
     {
        MovieTicket selectedTicket = this.tickets.get(0);
        double PricePerSeatGet = selectedTicket.getPrice();
-       boolean CheckPremium = selectedTicket.isPremiumTicket();
        boolean CheckStudentOrder = this.isStudentOrder;
 
+       boolean SecondTicketFree = false;
 
-       //2e Kaartje gratis
-        if(tickets.size() >= 2){
-            //get second ticket
-            MovieTicket secondticket = tickets.get(1);
+       //Normaale totale prijs
+        double AmountTickets = tickets.size();
+        this.OrderPrice = AmountTickets*PricePerSeatGet;
 
-            //Ik kreeg niet de tijd van de screening te pakken daarom de tijd gepakt van bestellen. WIJZIG DIT
-            String DayOfOrder = LocalDate.now().getDayOfWeek().toString();
-
-            //student
+        //2e kaartje gratis
+        if (tickets.size() >= 2){
+            //Is de order voor studenten?
             if(CheckStudentOrder == true){
-                double newprice = 0.00;
-                //pak prijs van ticket en wijzig prijs naar 0
+                //2e kaartje gratis dus van de totale prijs, haal 1 ticket prijs eraf
+                this.OrderPrice = this.OrderPrice - PricePerSeatGet;
+                SecondTicketFree = true;
+            }else{
+                //Valt de filmdag op ma/di/wo/do?
+                MovieTicket SelectedTicket = tickets.get(0);
 
-            }
-            //geen student
-            else{
-                if(DayOfOrder != "FRIDAY" ||DayOfOrder != "SATURDAY" ||DayOfOrder != "SUNDAY" ){
-                    double newprice = 0.00;
-                    //pak prijs van ticket en wijzig prijs naar 0;
-
-                }else{
-                    if(tickets.size() >= 6){
-                        double TotaalAmount = 0.00;
-                        for (int i = 1; i <= tickets.size(); i++){
-                            MovieTicket SelectedTicket = tickets.get(i);
-                            double Price = SelectedTicket.getPrice();
-                            TotaalAmount = TotaalAmount + Price;
-                        }
-                        TotaalAmount = TotaalAmount*0.9;
-
-                        //verdeel de prijs over de tickets zodat iedereen een neiuwe amount krijgt
-                    }
+                LocalDateTime ScreeningDate = SelectedTicket.GetScreeningDate();
+                String ScreenDateName = ScreeningDate.getDayOfWeek().toString();
+                if(ScreenDateName != "FRIDAY" || ScreenDateName != "SATURDAY" || ScreenDateName != "SUNDAY"){
+                    //Indien de datum NIET op vrijdag, zaterdag of zondagvalt, is het tweede kaartje gratis en moet er een ticket prijs van het totale bedrag afgetrokkken worden
+                    this.OrderPrice = this.OrderPrice - PricePerSeatGet;
                 }
             }
-
         }
 
-        //
-
-       //PrijsPremium
-        if(CheckPremium == true && CheckStudentOrder == true){
-            
-            PricePerSeatGet = PricePerSeatGet + 2.00;
-        }
-        if(CheckPremium == true && CheckStudentOrder == false){
-            PricePerSeatGet = PricePerSeatGet + 3.00;
+        //10% Korting Krijgen indien je niet een student bent EN je hebt meer dan 6 kaartjes
+        if (CheckStudentOrder == false){
+            //Is het aantal meer dan 6?
+            if(AmountTickets >= 6){
+                //Geef 10% korting op het totale bedrag
+                this.OrderPrice = this.OrderPrice*0.90;
+            }
         }
 
-
-        return ;
+        //Bekijk voor elke ticket of de ticket een premium ticket is
+        double TotalPremiumPrice = 0.00;
+        for (int i = 0; i < AmountTickets; i++){
+            //Is de order voor studenten?
+            if(CheckStudentOrder == true){
+                if(this.tickets.get(i).isPremiumTicket() == true){
+                    //Voor 2 euro toe aan het totale bedrag
+                    if (i != 1){
+                        this.OrderPrice = this.OrderPrice + 2.00;
+                    }
+                }
+            }else{
+                TotalPremiumPrice = TotalPremiumPrice +2.00;
+            }
+        }
+        //Indien het geen student is en de 10% korting heeft gekregen, voeg 10% korting toe aan de extra kosten
+        if(CheckStudentOrder == false && AmountTickets >= 6){
+            TotalPremiumPrice = TotalPremiumPrice*0.90;
+            this.OrderPrice = this.OrderPrice + TotalPremiumPrice;
+        }
+        System.out.println(this.OrderPrice);
+        return;
     }
+
 
     public void export(TicketExportFormat exportFormat)
     {
