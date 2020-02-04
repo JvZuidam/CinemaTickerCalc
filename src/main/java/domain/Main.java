@@ -1,9 +1,6 @@
 package domain;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.Date;
 
 public class Main {
 
@@ -19,6 +16,7 @@ public class Main {
         order.addSeatReservation(movieticket);
         order.addSeatReservation(movieticket1);
 
+        order.getOrderNr();
         order.calculatePrice();
     }
 }

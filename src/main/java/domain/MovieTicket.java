@@ -1,7 +1,6 @@
 package domain;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class MovieTicket
 {
@@ -43,7 +42,4 @@ public class MovieTicket
         return movieScreening.GEtDateScreening();
     }
 
-    public double SetScreeningPrice(double Price){
-        return movieScreening.SetPricePerSeat(Price);
-    }
 }

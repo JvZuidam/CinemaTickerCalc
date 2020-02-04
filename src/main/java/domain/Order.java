@@ -1,9 +1,9 @@
 package domain;
 
-import java.time.LocalDate;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Order
 {
@@ -23,6 +23,8 @@ public class Order
 
     public int getOrderNr()
     {
+        Random rand = new Random();
+        orderNr = rand.nextInt(999999999);
         return orderNr;
     }
 
@@ -44,9 +46,7 @@ public class Order
         this.OrderPrice = AmountTickets*PricePerSeatGet;
 
         //2e kaartje gratis
-        if (tickets.size() >= 2){
-            //Is de order voor studenten?
-            if(CheckStudentOrder == true){
+            if(CheckStudentOrder == true && tickets.size() >= 2){
                 //2e kaartje gratis dus van de totale prijs, haal 1 ticket prijs eraf
                 this.OrderPrice = this.OrderPrice - PricePerSeatGet;
                 SecondTicketFree = true;
@@ -57,34 +57,26 @@ public class Order
                 LocalDateTime ScreeningDate = SelectedTicket.GetScreeningDate();
                 String ScreenDateName = ScreeningDate.getDayOfWeek().toString();
                 if(ScreenDateName != "FRIDAY" || ScreenDateName != "SATURDAY" || ScreenDateName != "SUNDAY"){
-                    //Indien de datum NIET op vrijdag, zaterdag of zondagvalt, is het tweede kaartje gratis en moet er een ticket prijs van het totale bedrag afgetrokkken worden
+                    //Indien de datum NIET op vrijdag, zaterdag of zondag valt, is het tweede kaartje gratis en moet er een ticket prijs van het totale bedrag afgetrokkken worden
                     this.OrderPrice = this.OrderPrice - PricePerSeatGet;
                 }
             }
-        }
+
 
         //10% Korting Krijgen indien je niet een student bent EN je hebt meer dan 6 kaartjes
-        if (CheckStudentOrder == false){
-            //Is het aantal meer dan 6?
-            if(AmountTickets >= 6){
+        if (CheckStudentOrder == false && AmountTickets >= 6){
                 //Geef 10% korting op het totale bedrag
                 this.OrderPrice = this.OrderPrice*0.90;
-            }
         }
 
         //Bekijk voor elke ticket of de ticket een premium ticket is
         double TotalPremiumPrice = 0.00;
         for (int i = 0; i < AmountTickets; i++){
             //Is de order voor studenten?
-            if(CheckStudentOrder == true){
-                if(this.tickets.get(i).isPremiumTicket() == true){
-                    //Voor 2 euro toe aan het totale bedrag
-                    if (i != 1){
-                        this.OrderPrice = this.OrderPrice + 2.00;
-                    }
-                }
+            if(CheckStudentOrder == true && this.tickets.get(i).isPremiumTicket() == true && i != 1){
+                this.OrderPrice = this.OrderPrice + 2.00;
             }else{
-                TotalPremiumPrice = TotalPremiumPrice +2.00;
+                TotalPremiumPrice = TotalPremiumPrice +3.00;
             }
         }
         //Indien het geen student is en de 10% korting heeft gekregen, voeg 10% korting toe aan de extra kosten
@@ -92,7 +84,8 @@ public class Order
             TotalPremiumPrice = TotalPremiumPrice*0.90;
             this.OrderPrice = this.OrderPrice + TotalPremiumPrice;
         }
-        System.out.println(this.OrderPrice);
+        System.out.println("Prijs voor order " + this.orderNr+ " = € " + this.OrderPrice);
+
         return;
     }
 
@@ -102,5 +95,6 @@ public class Order
         // Bases on the string respresentations of the tickets (toString), write
         // the ticket to a file with naming convention Order_<orderNr>.txt of
         // Order_<orderNr>.json
+
     }
 }
