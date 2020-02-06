@@ -40,7 +40,7 @@ public class Order
         double orderPrice = AmountTickets * PricePerSeatGet;
 
         //Haal Datum op
-        LocalDateTime ScreeningDate = selectedTicket.GetScreeningDate();
+        LocalDateTime ScreeningDate = selectedTicket.getScreeningDate();
         String ScreenDateName = ScreeningDate.getDayOfWeek().toString();
 
         //2e kaartje gratis
