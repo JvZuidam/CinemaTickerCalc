@@ -1,4 +1,9 @@
 package domain;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -29,66 +34,65 @@ public class Order
 
     void calculatePrice()
     {
-       MovieTicket selectedTicket = this.tickets.get(0);
-       double pricePerSeatGet = selectedTicket.getPrice();
        boolean checkStudentOrder = this.isStudentOrder;
+        //NEW METHOD Second ticket free
 
-       boolean secondTicketFree = false;
+        double orderPrice1 = 0.00;
 
-       //Normaale totale prijs
-        double amountTickets = tickets.size();
-        double orderPrice = amountTickets * pricePerSeatGet;
+        for(int i = 1; i <= tickets.size(); i++) {
+            MovieTicket selectedTicket1 = tickets.get(i-1);
+            //Indien student:
+            if (checkStudentOrder) {
+                if (i % 2 != 0) {
+                    orderPrice1 += selectedTicket1.getPrice() + (selectedTicket1.isPremiumTicket() ? 2: 0);
+                }
 
-        //Haal Datum op
-        LocalDateTime screeningDate = selectedTicket.getScreeningDate();
-        String screenDateName = screeningDate.getDayOfWeek().toString();
-
-        //2e kaartje gratis
-            //Indien je studentn bent en je hebt meer dan twee kaartjes, krijg het tweede kaartje gratis
-            if(checkStudentOrder && tickets.size() >= 2){
-                orderPrice = orderPrice - pricePerSeatGet;
-                secondTicketFree = true;
             }
-            //Indien je geen studentt bent en de filmdag niet op vrijdag/zaterdag/zondag is, krijg het tweede kaartje gratis
-            if(!checkStudentOrder && !screenDateName.equals("FRIDAY") && !screenDateName.equals("SATURDAY") && !screenDateName.equals("SUNDAY")){
-                orderPrice = orderPrice - pricePerSeatGet;
-                secondTicketFree = true;
+            if (!checkStudentOrder) {
+                boolean ticketFree = false;
+                switch (selectedTicket1.getScreeningDate().getDayOfWeek().name()) {
+                    case ("MONDAY"):
+                        ticketFree = true;
+                        break;
+                    case ("TUESDAY"):
+                        ticketFree = true;
+                        break;
+                    case ("WEDNESDAY"):
+                        ticketFree = true;
+                        break;
+                    case ("THURSDAY"):
+                        ticketFree = true;
+                        break;
+                    case ("FRIDAY"):
+                    case ("SATURDAY"):
+                    case ("SUNDAY"):
+                    default:
+                        break;
+                }
+                if (ticketFree && i % 2 != 0) {
+                    orderPrice1 += (selectedTicket1.getPrice() + (selectedTicket1.isPremiumTicket() ? 3: 0));
+                }
+
+                boolean groupDiscount = false;
+                switch (selectedTicket1.getScreeningDate().getDayOfWeek().name()) {
+                    case ("SATURDAY"):
+                        if(tickets.size() >= 6) {
+                            groupDiscount = true;
+                        }
+                    case ("SUNDAY"):
+                        if(tickets.size() >= 6) {
+                            groupDiscount = true;
+                        }
+                    default:
+                        break;
+                }
+
+                if (groupDiscount) {
+                    orderPrice1 = orderPrice1 * 0.90;
+                }
             }
-
-
-        //10% Korting Krijgen indien je niet een student bent EN je hebt meer dan 6 kaartjes
-        if (!checkStudentOrder && amountTickets >= 6){
-                //Geef 10% korting op het totale bedrag
-                orderPrice = orderPrice *0.90;
         }
-
-        //Bekijk voor elke ticket of de ticket een premium ticket is
-        double totalPremiumPrice = 0.00;
-        for (int i = 0; i < amountTickets; i++){
-            //Indien je een student bent en je kaartje is een premium kaartje en het gaat niet om je tweede kaartje, extra kosten is 2 euro
-            if(checkStudentOrder && this.tickets.get(i).isPremiumTicket() && i != 1){
-                orderPrice = orderPrice + 2.00;
-            }
-            //Indien je niet een student bent en je kaartje is een premium kaart
-            if(!checkStudentOrder && this.tickets.get(i).isPremiumTicket() && tickets.get(i).getPrice() != 0.00 ){
-                totalPremiumPrice = totalPremiumPrice + 3.00;
-            }
-        }
-
-        //Indien je niet een student bent en je kaartje is een premium ticket en je hebt je tweede kaartje gratis gekregen haal 1 extra kosten eraf
-        if(!checkStudentOrder && this.tickets.get(1).isPremiumTicket() && secondTicketFree){
-            totalPremiumPrice = totalPremiumPrice - 3.00;
-        }
-
-
-        //Indien het geen student is en de 10% korting heeft gekregen, voeg 10% korting toe aan de extra kosten
-        if(!checkStudentOrder && amountTickets >= 6){
-            totalPremiumPrice = totalPremiumPrice*0.90;
-            orderPrice = orderPrice + totalPremiumPrice;
-        }
-        System.out.println("Prijs voor order " + this.orderNr+ " = € " + orderPrice);
-
-        //Complexiteit 19
+        System.out.println("Order Price: €" + orderPrice1);
     }
 
 
@@ -97,6 +101,22 @@ public class Order
         // Bases on the string respresentations of the tickets (toString), write
         // the ticket to a file with naming convention Order_<orderNr>.txt of
         // Order_<orderNr>.json
+
+        JSONArray ticketArray = new JSONArray();
+
+        for (MovieTicket ticket : tickets) {
+            JSONObject ticketObject = new JSONObject();
+            ticketObject.put("ticket", ticket.toString());
+            ticketArray.add(ticketObject);
+        }
+        try (FileWriter file = new FileWriter("Order_" + orderNr + ".json")) {
+            file.write(ticketArray.toJSONString());
+            file.flush();
+            System.out.println(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }
