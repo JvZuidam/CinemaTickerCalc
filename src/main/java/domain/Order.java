@@ -1,5 +1,4 @@
 package domain;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -40,19 +39,20 @@ public class Order
         double AmountTickets = tickets.size();
         double orderPrice = AmountTickets * PricePerSeatGet;
 
+        //Haal Datum op
+        LocalDateTime ScreeningDate = selectedTicket.GetScreeningDate();
+        String ScreenDateName = ScreeningDate.getDayOfWeek().toString();
+
         //2e kaartje gratis
+            //Indien je studentn bent en je hebt meer dan twee kaartjes, krijg het tweede kaartje gratis
             if(CheckStudentOrder && tickets.size() >= 2){
-                //2e kaartje gratis dus van de totale prijs, haal 1 ticket prijs eraf
                 orderPrice = orderPrice - PricePerSeatGet;
                 SecondTicketFree = true;
-            }else{
-                //Valt de filmdag op ma/di/wo/do?
-                MovieTicket SelectedTicket = tickets.get(0);
-
-                LocalDateTime ScreeningDate = SelectedTicket.getScreeningDate();
-                String ScreenDateName = ScreeningDate.getDayOfWeek().toString();
-                //Indien de datum NIET op vrijdag, zaterdag of zondag valt, is het tweede kaartje gratis en moet er een ticket prijs van het totale bedrag afgetrokkken worden
+            }
+            //Indien je geen studentt bent en de filmdag niet op vrijdag/zaterdag/zondag is, krijg het tweede kaartje gratis
+            if(!CheckStudentOrder && !ScreenDateName.equals("FRIDAY") && !ScreenDateName.equals("SATURDAY") && !ScreenDateName.equals("SUNDAY")){
                 orderPrice = orderPrice - PricePerSeatGet;
+                SecondTicketFree = true;
             }
 
 
@@ -65,19 +65,30 @@ public class Order
         //Bekijk voor elke ticket of de ticket een premium ticket is
         double TotalPremiumPrice = 0.00;
         for (int i = 0; i < AmountTickets; i++){
-            //Is de order voor studenten?
+            //Indien je een student bent en je kaartje is een premium kaartje en het gaat niet om je tweede kaartje, extra kosten is 2 euro
             if(CheckStudentOrder && this.tickets.get(i).isPremiumTicket() && i != 1){
                 orderPrice = orderPrice + 2.00;
-            }else{
-                TotalPremiumPrice = TotalPremiumPrice +3.00;
+            }
+            //Indien je niet een student bent en je kaartje is een premium kaart
+            if(!CheckStudentOrder && this.tickets.get(i).isPremiumTicket() && tickets.get(i).getPrice() != 0.00 ){
+                TotalPremiumPrice = TotalPremiumPrice + 3.00;
             }
         }
+
+        //Indien je niet een student bent en je kaartje is een premium ticket en je hebt je tweede kaartje gratis gekregen haal 1 extra kosten eraf
+        if(!CheckStudentOrder && this.tickets.get(1).isPremiumTicket() && SecondTicketFree){
+            TotalPremiumPrice = TotalPremiumPrice - 3.00;
+        }
+
+
         //Indien het geen student is en de 10% korting heeft gekregen, voeg 10% korting toe aan de extra kosten
         if(!CheckStudentOrder && AmountTickets >= 6){
             TotalPremiumPrice = TotalPremiumPrice*0.90;
             orderPrice = orderPrice + TotalPremiumPrice;
         }
         System.out.println("Prijs voor order " + this.orderNr+ " = € " + orderPrice);
+
+        //Complexiteit 19
     }
 
 
