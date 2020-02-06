@@ -30,61 +30,61 @@ public class Order
     void calculatePrice()
     {
        MovieTicket selectedTicket = this.tickets.get(0);
-       double PricePerSeatGet = selectedTicket.getPrice();
-       boolean CheckStudentOrder = this.isStudentOrder;
+       double pricePerSeatGet = selectedTicket.getPrice();
+       boolean checkStudentOrder = this.isStudentOrder;
 
-       boolean SecondTicketFree = false;
+       boolean secondTicketFree = false;
 
        //Normaale totale prijs
-        double AmountTickets = tickets.size();
-        double orderPrice = AmountTickets * PricePerSeatGet;
+        double amountTickets = tickets.size();
+        double orderPrice = amountTickets * pricePerSeatGet;
 
         //Haal Datum op
-        LocalDateTime ScreeningDate = selectedTicket.getScreeningDate();
-        String ScreenDateName = ScreeningDate.getDayOfWeek().toString();
+        LocalDateTime screeningDate = selectedTicket.getScreeningDate();
+        String screenDateName = screeningDate.getDayOfWeek().toString();
 
         //2e kaartje gratis
             //Indien je studentn bent en je hebt meer dan twee kaartjes, krijg het tweede kaartje gratis
-            if(CheckStudentOrder && tickets.size() >= 2){
-                orderPrice = orderPrice - PricePerSeatGet;
-                SecondTicketFree = true;
+            if(checkStudentOrder && tickets.size() >= 2){
+                orderPrice = orderPrice - pricePerSeatGet;
+                secondTicketFree = true;
             }
             //Indien je geen studentt bent en de filmdag niet op vrijdag/zaterdag/zondag is, krijg het tweede kaartje gratis
-            if(!CheckStudentOrder && !ScreenDateName.equals("FRIDAY") && !ScreenDateName.equals("SATURDAY") && !ScreenDateName.equals("SUNDAY")){
-                orderPrice = orderPrice - PricePerSeatGet;
-                SecondTicketFree = true;
+            if(!checkStudentOrder && !screenDateName.equals("FRIDAY") && !screenDateName.equals("SATURDAY") && !screenDateName.equals("SUNDAY")){
+                orderPrice = orderPrice - pricePerSeatGet;
+                secondTicketFree = true;
             }
 
 
         //10% Korting Krijgen indien je niet een student bent EN je hebt meer dan 6 kaartjes
-        if (!CheckStudentOrder && AmountTickets >= 6){
+        if (!checkStudentOrder && amountTickets >= 6){
                 //Geef 10% korting op het totale bedrag
                 orderPrice = orderPrice *0.90;
         }
 
         //Bekijk voor elke ticket of de ticket een premium ticket is
-        double TotalPremiumPrice = 0.00;
-        for (int i = 0; i < AmountTickets; i++){
+        double totalPremiumPrice = 0.00;
+        for (int i = 0; i < amountTickets; i++){
             //Indien je een student bent en je kaartje is een premium kaartje en het gaat niet om je tweede kaartje, extra kosten is 2 euro
-            if(CheckStudentOrder && this.tickets.get(i).isPremiumTicket() && i != 1){
+            if(checkStudentOrder && this.tickets.get(i).isPremiumTicket() && i != 1){
                 orderPrice = orderPrice + 2.00;
             }
             //Indien je niet een student bent en je kaartje is een premium kaart
-            if(!CheckStudentOrder && this.tickets.get(i).isPremiumTicket() && tickets.get(i).getPrice() != 0.00 ){
-                TotalPremiumPrice = TotalPremiumPrice + 3.00;
+            if(!checkStudentOrder && this.tickets.get(i).isPremiumTicket() && tickets.get(i).getPrice() != 0.00 ){
+                totalPremiumPrice = totalPremiumPrice + 3.00;
             }
         }
 
         //Indien je niet een student bent en je kaartje is een premium ticket en je hebt je tweede kaartje gratis gekregen haal 1 extra kosten eraf
-        if(!CheckStudentOrder && this.tickets.get(1).isPremiumTicket() && SecondTicketFree){
-            TotalPremiumPrice = TotalPremiumPrice - 3.00;
+        if(!checkStudentOrder && this.tickets.get(1).isPremiumTicket() && secondTicketFree){
+            totalPremiumPrice = totalPremiumPrice - 3.00;
         }
 
 
         //Indien het geen student is en de 10% korting heeft gekregen, voeg 10% korting toe aan de extra kosten
-        if(!CheckStudentOrder && AmountTickets >= 6){
-            TotalPremiumPrice = TotalPremiumPrice*0.90;
-            orderPrice = orderPrice + TotalPremiumPrice;
+        if(!checkStudentOrder && amountTickets >= 6){
+            totalPremiumPrice = totalPremiumPrice*0.90;
+            orderPrice = orderPrice + totalPremiumPrice;
         }
         System.out.println("Prijs voor order " + this.orderNr+ " = € " + orderPrice);
 
