@@ -23,8 +23,6 @@ public class Order
 
     public int getOrderNr()
     {
-        Random rand = new Random();
-        orderNr = rand.nextInt(999999999);
         return orderNr;
     }
 
