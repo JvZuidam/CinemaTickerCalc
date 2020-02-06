@@ -96,20 +96,6 @@ public class Order
         // the ticket to a file with naming convention Order_<orderNr>.txt of
         // Order_<orderNr>.json
 
-        JSONArray ticketArray = new JSONArray();
-
-        for (MovieTicket ticket : tickets) {
-            JSONObject ticketObject = new JSONObject();
-            ticketObject.put("ticket", ticket.toString());
-            ticketArray.add(ticketObject);
-        }
-        try (FileWriter file = new FileWriter("Order_" + orderNr + ".json")) {
-            file.write(ticketArray.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
 
     }
 }

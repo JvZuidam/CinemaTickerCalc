@@ -1,6 +1,10 @@
 package domain;
 
+
 import java.time.LocalDateTime;
+
+import java.util.logging.Logger;
+
 
 public class Main {
 
@@ -16,7 +20,6 @@ public class Main {
         order.addSeatReservation(movieticket);
         order.addSeatReservation(movieticket1);
 
-
-        System.out.println( "Order Price: €" + order.calculatePrice());
+        Logger.getLogger("Order Price: €" + order.calculatePrice());
     }
 }
