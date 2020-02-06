@@ -18,14 +18,13 @@ public class OrderTest {
     @Test
     public void checkIfOrderNrIsPositive() {
         //Arrange
-        Order order = new Order(0, true);
+        Order order = new Order(1, true);
         OrderTest orderTest = new OrderTest();
 
         //Act
         int result = order.getOrderNr();
 
-
         //Assert
-        assertEquals(1, 1);
+        assertTrue(orderTest.isPositiveNumber(result));
     }
 }
