@@ -6,7 +6,6 @@ public class MovieScreening
 {
     private Movie movie;
 
-    // LocalDate date = LocalDate.of(2000, Month.NOVEMBER, 20);
     private LocalDateTime dateAndTime;
     private double pricePerSeat;
 
@@ -24,7 +23,7 @@ public class MovieScreening
         return pricePerSeat;
     }
 
-    public LocalDateTime GEtDateScreening(){
+    public LocalDateTime getDateScreening(){
         return dateAndTime;
     }
 

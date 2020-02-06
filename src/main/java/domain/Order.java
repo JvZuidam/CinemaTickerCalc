@@ -1,9 +1,7 @@
 package domain;
 
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Order
 {
@@ -17,7 +15,7 @@ public class Order
         this.orderNr = orderNr;
         this.isStudentOrder = isStudentOrder;
 
-        tickets = new ArrayList<MovieTicket>();
+        tickets = new ArrayList<>();
     }
 
     public int getOrderNr()
@@ -51,7 +49,7 @@ public class Order
                 //Valt de filmdag op ma/di/wo/do?
                 MovieTicket SelectedTicket = tickets.get(0);
 
-                LocalDateTime ScreeningDate = SelectedTicket.GetScreeningDate();
+                LocalDateTime ScreeningDate = SelectedTicket.getScreeningDate();
                 String ScreenDateName = ScreeningDate.getDayOfWeek().toString();
                 //Indien de datum NIET op vrijdag, zaterdag of zondag valt, is het tweede kaartje gratis en moet er een ticket prijs van het totale bedrag afgetrokkken worden
                 orderPrice = orderPrice - PricePerSeatGet;

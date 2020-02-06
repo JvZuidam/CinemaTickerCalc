@@ -38,8 +38,8 @@ public class MovieTicket
                 (isPremiumTicket ? " (Premium)" : "");
     }
 
-    public LocalDateTime GetScreeningDate(){
-        return movieScreening.GEtDateScreening();
+    public LocalDateTime getScreeningDate(){
+        return movieScreening.getDateScreening();
     }
 
 }
