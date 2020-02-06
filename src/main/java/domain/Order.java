@@ -1,10 +1,8 @@
 package domain;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Order
@@ -32,7 +30,7 @@ public class Order
         tickets.add(ticket);
     }
 
-    void calculatePrice()
+    double calculatePrice()
     {
        boolean checkStudentOrder = this.isStudentOrder;
         //NEW METHOD Second ticket free
@@ -42,11 +40,8 @@ public class Order
         for(int i = 1; i <= tickets.size(); i++) {
             MovieTicket selectedTicket1 = tickets.get(i-1);
             //Indien student:
-            if (checkStudentOrder) {
-                if (i % 2 != 0) {
+            if (checkStudentOrder && i % 2 != 0) {
                     orderPrice1 += selectedTicket1.getPrice() + (selectedTicket1.isPremiumTicket() ? 2: 0);
-                }
-
             }
             if (!checkStudentOrder) {
                 boolean ticketFree = false;
@@ -63,9 +58,6 @@ public class Order
                     case ("THURSDAY"):
                         ticketFree = true;
                         break;
-                    case ("FRIDAY"):
-                    case ("SATURDAY"):
-                    case ("SUNDAY"):
                     default:
                         break;
                 }
@@ -92,7 +84,9 @@ public class Order
                 }
             }
         }
-        System.out.println("Order Price: €" + orderPrice1);
+        return orderPrice1;
+
+        //Complexiteit oud = 22
     }
 
 
@@ -112,7 +106,6 @@ public class Order
         try (FileWriter file = new FileWriter("Order_" + orderNr + ".json")) {
             file.write(ticketArray.toJSONString());
             file.flush();
-            System.out.println(file);
         } catch (IOException e) {
             e.printStackTrace();
         }

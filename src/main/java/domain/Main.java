@@ -16,6 +16,7 @@ public class Main {
         order.addSeatReservation(movieticket);
         order.addSeatReservation(movieticket1);
 
-        order.calculatePrice();
+
+        System.out.println( "Order Price: €" + order.calculatePrice());
     }
 }
