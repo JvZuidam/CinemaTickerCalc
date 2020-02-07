@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import domain.Order;
+import domain.StudentTicket;
 import org.junit.Test;
 
 public class OrderTest {
@@ -18,7 +19,7 @@ public class OrderTest {
     @Test
     public void checkIfOrderNrIsPositive() {
         //Arrange
-        Order order = new Order(1, true);
+        Order order = new Order(1, new StudentTicket());
         OrderTest orderTest = new OrderTest();
 
         //Act

@@ -15,11 +15,12 @@ public class Main {
         MovieScreening movieScreening = new MovieScreening(movie, now, 12.99);
         MovieTicket movieticket = new MovieTicket(movieScreening,true,12,13);
         MovieTicket movieticket1 = new MovieTicket(movieScreening,true,12,14);
-        Order order = new Order(1, false);
+        Order order = new Order(1, new StudentTicket());
 
         order.addSeatReservation(movieticket);
         order.addSeatReservation(movieticket1);
 
-        Logger.getLogger("Order Price: €" + order.calculatePrice());
+
+        System.out.println("Order Price: €" + order.calculatePrice());
     }
 }

@@ -6,12 +6,14 @@ public class Order
     private int orderNr;
     private boolean isStudentOrder;
 
+    private IAudienceTicket orderAudience;
+
     private ArrayList<MovieTicket> tickets;
 
-    public Order(int orderNr, boolean isStudentOrder)
+    public Order(int orderNr, IAudienceTicket orderAudience)
     {
         this.orderNr = orderNr;
-        this.isStudentOrder = isStudentOrder;
+        this.orderAudience = orderAudience;
 
         tickets = new ArrayList<>();
     }
@@ -26,64 +28,13 @@ public class Order
         tickets.add(ticket);
     }
 
-    double calculatePrice()
-    {
-       boolean checkStudentOrder = this.isStudentOrder;
-        //NEW METHOD Second ticket free
-
-        double orderPrice1 = 0.00;
-
-        for(int i = 1; i <= tickets.size(); i++) {
-            MovieTicket selectedTicket1 = tickets.get(i-1);
-            //Indien student:
-            if (checkStudentOrder && i % 2 != 0) {
-                    orderPrice1 += selectedTicket1.getPrice() + (selectedTicket1.isPremiumTicket() ? 2: 0);
-            }
-            if (!checkStudentOrder) {
-                boolean ticketFree = false;
-                switch (selectedTicket1.getScreeningDate().getDayOfWeek().name()) {
-                    case ("MONDAY"):
-                        ticketFree = true;
-                        break;
-                    case ("TUESDAY"):
-                        ticketFree = true;
-                        break;
-                    case ("WEDNESDAY"):
-                        ticketFree = true;
-                        break;
-                    case ("THURSDAY"):
-                        ticketFree = true;
-                        break;
-                    default:
-                        break;
-                }
-                if (ticketFree && i % 2 != 0) {
-                    orderPrice1 += (selectedTicket1.getPrice() + (selectedTicket1.isPremiumTicket() ? 3: 0));
-                }
-
-                boolean groupDiscount = false;
-                switch (selectedTicket1.getScreeningDate().getDayOfWeek().name()) {
-                    case ("SATURDAY"):
-                        if(tickets.size() >= 6) {
-                            groupDiscount = true;
-                        }
-                    case ("SUNDAY"):
-                        if(tickets.size() >= 6) {
-                            groupDiscount = true;
-                        }
-                    default:
-                        break;
-                }
-
-                if (groupDiscount) {
-                    orderPrice1 = orderPrice1 * 0.90;
-                }
-            }
-        }
-        return orderPrice1;
-
-        //Complexiteit oud = 22
+    public ArrayList<MovieTicket> retrieveTickets(){
+        return this.tickets;
     }
+
+   public double calculatePrice() {
+        return orderAudience.calculatePrice(this);
+   }
 
 
     public void export(TicketExportFormat exportFormat)
