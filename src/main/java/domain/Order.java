@@ -1,10 +1,10 @@
 package domain;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Order
 {
     private int orderNr;
-    private boolean isStudentOrder;
 
     private IAudienceTicket orderAudience;
 
@@ -28,7 +28,7 @@ public class Order
         tickets.add(ticket);
     }
 
-    public ArrayList<MovieTicket> retrieveTickets(){
+    public List<MovieTicket> retrieveTickets(){
         return this.tickets;
     }
 

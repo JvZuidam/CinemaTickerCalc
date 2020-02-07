@@ -1,15 +1,13 @@
 package domain;
-
-import java.util.ArrayList;
+import java.util.List;
 
 public class PersonTicket implements IAudienceTicket {
     @Override
     public double calculatePrice(Order order) {
         double orderPrice = 0.00;
-        ArrayList<MovieTicket> orderTickets = order.retrieveTickets();
+        List<MovieTicket> orderTickets = order.retrieveTickets();
 
         for(int i = 1; i <= orderTickets.size(); i++) {
-            MovieTicket selectedTicket1 = orderTickets.get(i - 1);
             //tweede kaartje gratis
             if(i % 2 != 0 && !secondTicketFree(orderTickets.get(i -1))){
                 orderPrice += totalPriceOrder(orderTickets.get(i-1));
@@ -44,7 +42,7 @@ public class PersonTicket implements IAudienceTicket {
         return ticketFree;
     }
 
-    public boolean ticketDiscountGroup(ArrayList<MovieTicket> orderTickets){
+    public boolean ticketDiscountGroup(List<MovieTicket> orderTickets){
         boolean discountGroup = false;
         for (MovieTicket selectedTicket : orderTickets){
             switch (selectedTicket.getScreeningDate().getDayOfWeek().name()) {

@@ -1,9 +1,5 @@
 package domain;
-
-
 import java.time.LocalDateTime;
-
-import java.util.logging.Logger;
 
 
 public class Main {

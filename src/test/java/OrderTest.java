@@ -1,6 +1,4 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import domain.Order;
 import domain.StudentTicket;
 import org.junit.Test;
