@@ -49,10 +49,12 @@ public class PersonTicket implements IAudienceTicket {
                 case ("SATURDAY"):
                     if(orderTickets.size() >= 6) {
                         discountGroup = true;
+                        break;
                     }
                 case ("SUNDAY"):
                     if(orderTickets.size() >= 6) {
                         discountGroup = true;
+                        break;
                     }
                 default:
                     break;
