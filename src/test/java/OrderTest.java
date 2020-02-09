@@ -122,8 +122,8 @@ public class OrderTest {
         double resultSAT = orderSAT.calculatePrice();
         double amountTicketsSAT = orderSAT.retrieveTickets().size();
 
-        double resultSUN = orderSAT.calculatePrice();
-        double amountTicketsSUN = orderSAT.retrieveTickets().size();
+        double resultSUN = orderSUN.calculatePrice();
+        double amountTicketsSUN = orderSUN.retrieveTickets().size();
 
         //Assert
         assertEquals(70.146, resultSAT );
