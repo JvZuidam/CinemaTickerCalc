@@ -8,10 +8,14 @@ public class PersonTicket implements IAudienceTicket {
         List<MovieTicket> orderTickets = order.retrieveTickets();
 
         for(int i = 1; i <= orderTickets.size(); i++) {
-            //tweede kaartje gratis
-            if(i % 2 != 0 && !secondTicketFree(orderTickets.get(i -1))){
+            //indien de film op een madiwodo draait, is elk 2e ticket gratis
+            if(!secondTicketFree(orderTickets.get(i-1))){
                 orderPrice += totalPriceOrder(orderTickets.get(i-1));
             }
+            if(secondTicketFree(orderTickets.get(i-1)) && i % 2 != 0){
+                orderPrice += totalPriceOrder(orderTickets.get(i-1));
+            }
+
         }
 
         if(ticketDiscountGroup(orderTickets)){

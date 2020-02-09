@@ -18,7 +18,7 @@ public class StudentTicket implements IAudienceTicket {
     }
 
     public double totalPriceOrder(MovieTicket selectedTicket){
-        return (selectedTicket.getPrice() + (selectedTicket.isPremiumTicket() ? 3: 0));
+        return (selectedTicket.getPrice() + (selectedTicket.isPremiumTicket() ? 2: 0));
 
     }
 }

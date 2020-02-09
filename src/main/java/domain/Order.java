@@ -23,7 +23,7 @@ public class Order
         return orderNr;
     }
 
-    void addSeatReservation(MovieTicket ticket)
+    public void addSeatReservation(MovieTicket ticket)
     {
         tickets.add(ticket);
     }
@@ -32,7 +32,7 @@ public class Order
         return this.tickets;
     }
 
-   public double calculatePrice() {
+    public double calculatePrice() {
         return orderAudience.calculatePrice(this);
    }
 
